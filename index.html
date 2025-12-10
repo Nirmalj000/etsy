@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Listing - Photos and Video</title>
     <style>
+        /* Optimization: Use System Fonts for instant rendering */
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #fff; padding: 20px; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: "Graphik Webfont",-apple-system,BlinkMacSystemFont,"Roboto","Droid Sans","Segoe UI","Helvetica",Arial,sans-serif; background: #fff; padding: 20px; }
-        
-        /* --- NEW CSS ADDED FOR BLACK EFFECT --- */
+
+        /* --- OPTIMIZED BLACK EFFECT --- */
         .turned-black {
             filter: brightness(0) !important;
             cursor: pointer;
+            /* GPU Acceleration for smoother toggling */
+            transform: translateZ(0); 
+            will-change: filter;
         }
-        /* ------------------------------------- */
+        /* -------------------------------- */
 
+        /* Layout Utils */
         .wt-mt-md-6 { margin-top: 48px; }
         .wt-mt-xs-4 { margin-top: 24px; }
         .wt-mb-xs-1 { margin-bottom: 8px; }
@@ -35,17 +40,17 @@
         .wt-label { font-size: 16px; font-weight: 600; color: #222; display: block; }
         .wt-label__required::after { content: '*'; color: #b32; margin-left: 4px; }
         .wt-text-caption { font-size: 13px; color: #595959; }
-        .wt-text-caption-title { font-size: 13px; font-weight: 600; }
         .wt-text-body-01 { font-size: 14px; }
-        .wt-text-link { color: #222; text-decoration: underline; }
-        .wt-list { list-style: disc; padding-left: 20px; }
-        .wt-display-block { display: block; }
+        
+        /* Icons & Buttons */
         .wt-popover__trigger { background: none; border: none; cursor: pointer; padding: 0; color: #222; }
         .wt-icon--base-xs, .wt-icon--smaller-xs, .wt-icon--larger-xs { display: inline-block; width: 24px; height: 24px; }
         .wt-icon--smaller-xs { width: 18px; height: 18px; }
         .wt-icon--larger-xs { width: 32px; height: 32px; }
         .etsy-icon svg { width: 100%; height: 100%; fill: currentColor; }
         .wt-nudge-b-1 { position: relative; bottom: -1px; }
+        
+        /* Grid System */
         .wt-upload__area { position: relative; }
         .wt-width-full { width: 100%; }
         .wt-height-full { height: 100%; }
@@ -54,7 +59,10 @@
         .wt-grid__item-xs-5 { width: calc(41.666% - 16px); }
         .wt-grid__item-lg-2 { width: calc(16.666% - 16px); }
         .wt-flex-shrink-xs-0 { flex-shrink: 0; }
-        .le-media-grid__item { position: relative; aspect-ratio: 1; background: #f5f5f5; border-radius: 4px; overflow: hidden; cursor: grab; }
+        
+        /* Cards & Media */
+        /* Optimization: contain layout to reduce browser repaint calculations */
+        .le-media-grid__item { position: relative; aspect-ratio: 1; background: #f5f5f5; border-radius: 4px; overflow: hidden; cursor: grab; contain: content; }
         .le-media-grid__item:active { cursor: grabbing; }
         .le-aspect-ratio--square { aspect-ratio: 1; }
         .le-aspect-ratio__item { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
@@ -64,11 +72,15 @@
         .wt-sem-bg-elevation-0 { background: #fff; }
         .le-media-border--gray { border: 1px solid #e1e3df; }
         .le-media-preview-image-hide-edges { display: block; }
+        
+        /* Animation & Positioning */
         .wt-animated { transition: all 0.2s; }
         .wt-position-absolute { position: absolute; }
         .wt-position-relative { position: relative; }
         .wt-z-index-1 { z-index: 1; }
         .wt-z-index-2 { z-index: 2; }
+        
+        /* Badges & Overlays */
         .wt-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
         .wt-badge--statusInformational { background: #2196f3; color: #fff; }
         .wt-badge--small { padding: 2px 6px; font-size: 10px; }
@@ -92,6 +104,7 @@
         .wt-flex-direction-column-xs { flex-direction: column; }
         .le-media-grid__item__input { display: none; }
         video { width: 100%; height: 100%; object-fit: cover; }
+        
         @media (min-width: 900px) {
             .wt-grid__item-lg-2 { width: calc(16.666% - 13.33px); }
             .le-overflow-visible-lg { overflow: visible; }
@@ -112,11 +125,7 @@
             <div data-clg-id="WtPopoverControlled" class="wt-popover" style="display: inline-block;">
                 <button type="button" aria-describedby="popover-content" aria-label="Help" class="wt-popover__trigger wt-text-body-01">
                     <span class="wt-mr-xs-1 wt-nudge-b-1 wt-icon--base-xs etsy-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                            <path d="M12,22A10,10,0,1,1,22,12,10.012,10.012,0,0,1,12,22ZM12,4a8,8,0,1,0,8,8A8.009,8.009,0,0,0,12,4Z"></path>
-                            <circle cx="12" cy="16.5" r="1.5"></circle>
-                            <path d="M13,14H11a3.043,3.043,0,0,1,1.7-2.379C13.5,11.055,14,10.674,14,10a2,2,0,1,0-4,0H8a4,4,0,1,1,8,0,4,4,0,0,1-2.152,3.259A2.751,2.751,0,0,0,13,14Z"></path>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12,22A10,10,0,1,1,22,12,10.012,10.012,0,0,1,12,22ZM12,4a8,8,0,1,0,8,8A8.009,8.009,0,0,0,12,4Z"></path><circle cx="12" cy="16.5" r="1.5"></circle><path d="M13,14H11a3.043,3.043,0,0,1,1.7-2.379C13.5,11.055,14,10.674,14,10a2,2,0,1,0-4,0H8a4,4,0,1,1,8,0,4,4,0,0,1-2.152,3.259A2.751,2.751,0,0,0,13,14Z"></path></svg>
                     </span>
                 </button>
             </div>
@@ -129,31 +138,22 @@
             <div data-clg-id="WtGrid" class="wt-width-full le-overflow-x__scroll-xs le-overflow-visible-lg le-flex__nowrap-xs le-flex__wrap-lg wt-grid" id="mediaGrid">
                 
                 <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
-                    <div role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
+                    <div role="button" tabindex="0" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
                         <button type="button" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
-                            <img alt="Primary listing image" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+1" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
+                            <img decoding="async" alt="Primary listing image" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+1" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
                             <div class="wt-position-absolute wt-display-flex-xs wt-align-items-end wt-justify-content-flex-end le-aspect-ratio__item wt-object-fit-contain wt-width-full">
                                 <span data-clg-id="WtBadge" class="wt-badge wt-text-body-small wt-mt-xs-1 wt-mr-xs-1 wt-badge--statusInformational wt-badge--small">Primary</span>
                             </div>
                         </button>
                         <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
                             <div>
-                                <button type="button" data-testid="image-delete-button" data-clg-id="WtButton" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01">
-                                    <span class="wt-icon--smaller-xs etsy-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                            <path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path>
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path>
-                                        </svg>
-                                    </span>
+                                <button type="button" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01">
+                                    <span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path></svg></span>
                                 </button>
                             </div>
                             <div>
-                                <button type="button" data-testid="image-edit-button" data-clg-id="WtButton" class="wt-btn le-media-grid__button wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01">
-                                    <span class="wt-icon--smaller-xs etsy-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                            <path d="M20.414 6.414a2 2 0 1 0-2.833-2.824l-.001.002-.788.788 2.787 2.87zm-5.037-.62 2.787 2.87-9.75 9.75.001.001L4 20l1.588-4.412-.002-.002z"></path>
-                                        </svg>
-                                    </span>
+                                <button type="button" class="wt-btn le-media-grid__button wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01">
+                                    <span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.414 6.414a2 2 0 1 0-2.833-2.824l-.001.002-.788.788 2.787 2.87zm-5.037-.62 2.787 2.87-9.75 9.75.001.001L4 20l1.588-4.412-.002-.002z"></path></svg></span>
                                 </button>
                             </div>
                         </div>
@@ -168,22 +168,13 @@
                             </video>
                             <div class="wt-position-absolute wt-position-top wt-position-left wt-display-flex-xs wt-justify-content-center wt-align-items-center wt-height-full wt-width-full">
                                 <div class="wt-circle wt-overflow-hidden wt-bg-white wt-shadow-elevation-3">
-                                    <span class="wt-icon--smaller-xs wt-m-xs-1 etsy-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                            <path d="M4 4v16l16-8z"></path>
-                                        </svg>
-                                    </span>
+                                    <span class="wt-icon--smaller-xs wt-m-xs-1 etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4v16l16-8z"></path></svg></span>
                                 </div>
                             </div>
                         </button>
                         <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
-                            <button type="button" data-clg-id="WtButton" class="wt-btn wt-animated le-media-grid__button wt-text-brick wt-z-index-2 wt-animated--disappear-01 wt-btn--small wt-btn--icon">
-                                <span class="wt-icon--smaller-xs etsy-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                        <path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path>
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path>
-                                    </svg>
-                                </span>
+                            <button type="button" class="wt-btn wt-animated le-media-grid__button wt-text-brick wt-z-index-2 wt-animated--disappear-01 wt-btn--small wt-btn--icon">
+                                <span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path></svg></span>
                             </button>
                         </div>
                     </div>
@@ -192,31 +183,7 @@
                 <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
                     <div role="button" tabindex="0" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
                         <button type="button" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
-                            <img alt="Edit Listing image 2" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+2" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
-                        </button>
-                        <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
-                            <div>
-                                <button type="button" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01">
-                                    <span class="wt-icon--smaller-xs etsy-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path><path fill-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path></svg>
-                                    </span>
-                                </button>
-                            </div>
-                            <div>
-                                <button type="button" class="wt-btn le-media-grid__button wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01">
-                                    <span class="wt-icon--smaller-xs etsy-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.414 6.414a2 2 0 1 0-2.833-2.824l-.001.002-.788.788 2.787 2.87zm-5.037-.62 2.787 2.87-9.75 9.75.001.001L4 20l1.588-4.412-.002-.002z"></path></svg>
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
-                    <div role="button" tabindex="0" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
-                        <button type="button" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
-                            <img alt="Edit Listing image 3" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+3" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
+                            <img decoding="async" alt="Edit Listing image 2" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+2" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
                         </button>
                         <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
                             <div><button type="button" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path><path fill-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path></svg></span></button></div>
@@ -228,7 +195,7 @@
                 <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
                     <div role="button" tabindex="0" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
                         <button type="button" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
-                            <img alt="Edit Listing image 4" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+4" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
+                            <img decoding="async" alt="Edit Listing image 3" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+3" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
                         </button>
                         <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
                             <div><button type="button" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path><path fill-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path></svg></span></button></div>
@@ -240,7 +207,7 @@
                 <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
                     <div role="button" tabindex="0" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
                         <button type="button" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
-                            <img alt="Edit Listing image 5" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+5" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
+                            <img decoding="async" alt="Edit Listing image 4" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+4" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
                         </button>
                         <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
                             <div><button type="button" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path><path fill-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path></svg></span></button></div>
@@ -252,7 +219,19 @@
                 <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
                     <div role="button" tabindex="0" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
                         <button type="button" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
-                            <img alt="Edit Listing image 6" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+6" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
+                            <img decoding="async" alt="Edit Listing image 5" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+5" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
+                        </button>
+                        <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
+                            <div><button type="button" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path><path fill-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path></svg></span></button></div>
+                            <div><button type="button" class="wt-btn le-media-grid__button wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.414 6.414a2 2 0 1 0-2.833-2.824l-.001.002-.788.788 2.787 2.87zm-5.037-.62 2.787 2.87-9.75 9.75.001.001L4 20l1.588-4.412-.002-.002z"></path></svg></span></button></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
+                    <div role="button" tabindex="0" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
+                        <button type="button" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
+                            <img decoding="async" alt="Edit Listing image 6" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+6" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
                         </button>
                         <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
                             <div><button type="button" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path><path fill-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path></svg></span></button></div>
@@ -268,14 +247,7 @@
                             <div class="le-aspect-ratio__item wt-rounded-01 wt-overflow-hidden wt-width-full wt-height-full">
                                 <div class="wt-width-full wt-height-full wt-display-flex-xs wt-justify-content-center wt-align-items-center">
                                     <span data-empty-icon="true" class="wt-display-flex-xs wt-flex-direction-column-xs wt-align-items-center">
-                                        <span class="wt-screen-reader-only">Upload an image</span>
-                                        <span class="wt-icon--larger-xs le-media-icon etsy-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                                <path d="M22 2v18H11.398a5.5 5.5 0 0 0 .58-2H20V4H6v8.023a5.5 5.5 0 0 0-2 .579V2z"></path>
-                                                <path d="M10.508 13.738 12 11.5l1 1L15 9l3.5 7h-6.708a5.5 5.5 0 0 0-1.284-2.262M10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path>
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 17.5C2 19.981 4.019 22 6.5 22s4.5-2.019 4.5-4.5S8.981 13 6.5 13A4.505 4.505 0 0 0 2 17.5m5-.5h1.5a.5.5 0 0 1 0 1H7v1.5a.5.5 0 0 1-1 0V18H4.5a.5.5 0 0 1 0-1H6v-1.5a.5.5 0 0 1 1 0z"></path>
-                                            </svg>
-                                        </span>
+                                        <span class="wt-icon--larger-xs le-media-icon etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 2v18H11.398a5.5 5.5 0 0 0 .58-2H20V4H6v8.023a5.5 5.5 0 0 0-2 .579V2z"></path><path d="M10.508 13.738 12 11.5l1 1L15 9l3.5 7h-6.708a5.5 5.5 0 0 0-1.284-2.262M10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M2 17.5C2 19.981 4.019 22 6.5 22s4.5-2.019 4.5-4.5S8.981 13 6.5 13A4.505 4.505 0 0 0 2 17.5m5-.5h1.5a.5.5 0 0 1 0 1H7v1.5a.5.5 0 0 1-1 0V18H4.5a.5.5 0 0 1 0-1H6v-1.5a.5.5 0 0 1 1 0z"></path></svg></span>
                                     </span>
                                 </div>
                             </div>
@@ -290,14 +262,7 @@
                             <div class="le-aspect-ratio__item wt-rounded-01 wt-overflow-hidden wt-width-full wt-height-full">
                                 <div class="wt-width-full wt-height-full wt-display-flex-xs wt-justify-content-center wt-align-items-center">
                                     <span data-empty-icon="true" class="wt-display-flex-xs wt-flex-direction-column-xs wt-align-items-center">
-                                        <span class="wt-screen-reader-only">Upload an image</span>
-                                        <span class="wt-icon--larger-xs le-media-icon etsy-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                                <path d="M22 2v18H11.398a5.5 5.5 0 0 0 .58-2H20V4H6v8.023a5.5 5.5 0 0 0-2 .579V2z"></path>
-                                                <path d="M10.508 13.738 12 11.5l1 1L15 9l3.5 7h-6.708a5.5 5.5 0 0 0-1.284-2.262M10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path>
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 17.5C2 19.981 4.019 22 6.5 22s4.5-2.019 4.5-4.5S8.981 13 6.5 13A4.505 4.505 0 0 0 2 17.5m5-.5h1.5a.5.5 0 0 1 0 1H7v1.5a.5.5 0 0 1-1 0V18H4.5a.5.5 0 0 1 0-1H6v-1.5a.5.5 0 0 1 1 0z"></path>
-                                            </svg>
-                                        </span>
+                                        <span class="wt-icon--larger-xs le-media-icon etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 2v18H11.398a5.5 5.5 0 0 0 .58-2H20V4H6v8.023a5.5 5.5 0 0 0-2 .579V2z"></path><path d="M10.508 13.738 12 11.5l1 1L15 9l3.5 7h-6.708a5.5 5.5 0 0 0-1.284-2.262M10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M2 17.5C2 19.981 4.019 22 6.5 22s4.5-2.019 4.5-4.5S8.981 13 6.5 13A4.505 4.505 0 0 0 2 17.5m5-.5h1.5a.5.5 0 0 1 0 1H7v1.5a.5.5 0 0 1-1 0V18H4.5a.5.5 0 0 1 0-1H6v-1.5a.5.5 0 0 1 1 0z"></path></svg></span>
                                     </span>
                                 </div>
                             </div>
@@ -312,14 +277,7 @@
                             <div class="le-aspect-ratio__item wt-rounded-01 wt-overflow-hidden wt-width-full wt-height-full">
                                 <div class="wt-width-full wt-height-full wt-display-flex-xs wt-justify-content-center wt-align-items-center">
                                     <span data-empty-icon="true" class="wt-display-flex-xs wt-flex-direction-column-xs wt-align-items-center">
-                                        <span class="wt-screen-reader-only">Upload an image</span>
-                                        <span class="wt-icon--larger-xs le-media-icon etsy-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                                <path d="M22 2v18H11.398a5.5 5.5 0 0 0 .58-2H20V4H6v8.023a5.5 5.5 0 0 0-2 .579V2z"></path>
-                                                <path d="M10.508 13.738 12 11.5l1 1L15 9l3.5 7h-6.708a5.5 5.5 0 0 0-1.284-2.262M10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path>
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 17.5C2 19.981 4.019 22 6.5 22s4.5-2.019 4.5-4.5S8.981 13 6.5 13A4.505 4.505 0 0 0 2 17.5m5-.5h1.5a.5.5 0 0 1 0 1H7v1.5a.5.5 0 0 1-1 0V18H4.5a.5.5 0 0 1 0-1H6v-1.5a.5.5 0 0 1 1 0z"></path>
-                                            </svg>
-                                        </span>
+                                        <span class="wt-icon--larger-xs le-media-icon etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 2v18H11.398a5.5 5.5 0 0 0 .58-2H20V4H6v8.023a5.5 5.5 0 0 0-2 .579V2z"></path><path d="M10.508 13.738 12 11.5l1 1L15 9l3.5 7h-6.708a5.5 5.5 0 0 0-1.284-2.262M10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M2 17.5C2 19.981 4.019 22 6.5 22s4.5-2.019 4.5-4.5S8.981 13 6.5 13A4.505 4.505 0 0 0 2 17.5m5-.5h1.5a.5.5 0 0 1 0 1H7v1.5a.5.5 0 0 1-1 0V18H4.5a.5.5 0 0 1 0-1H6v-1.5a.5.5 0 0 1 1 0z"></path></svg></span>
                                     </span>
                                 </div>
                             </div>
@@ -334,14 +292,7 @@
                             <div class="le-aspect-ratio__item wt-rounded-01 wt-overflow-hidden wt-width-full wt-height-full">
                                 <div class="wt-width-full wt-height-full wt-display-flex-xs wt-justify-content-center wt-align-items-center">
                                     <span data-empty-icon="true" class="wt-display-flex-xs wt-flex-direction-column-xs wt-align-items-center">
-                                        <span class="wt-screen-reader-only">Upload an image</span>
-                                        <span class="wt-icon--larger-xs le-media-icon etsy-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                                <path d="M22 2v18H11.398a5.5 5.5 0 0 0 .58-2H20V4H6v8.023a5.5 5.0 0 0 0-2 .579V2z"></path>
-                                                <path d="M10.508 13.738 12 11.5l1 1L15 9l3.5 7h-6.708a5.5 5.5 0 0 0-1.284-2.262M10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path>
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 17.5C2 19.981 4.019 22 6.5 22s4.5-2.019 4.5-4.5S8.981 13 6.5 13A4.505 4.505 0 0 0 2 17.5m5-.5h1.5a.5.5 0 0 1 0 1H7v1.5a.5.5 0 0 1-1 0V18H4.5a.5.5 0 0 1 0-1H6v-1.5a.5.5 0 0 1 1 0z"></path>
-                                            </svg>
-                                        </span>
+                                        <span class="wt-icon--larger-xs le-media-icon etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 2v18H11.398a5.5 5.5 0 0 0 .58-2H20V4H6v8.023a5.5 5.0 0 0 0-2 .579V2z"></path><path d="M10.508 13.738 12 11.5l1 1L15 9l3.5 7h-6.708a5.5 5.5 0 0 0-1.284-2.262M10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M2 17.5C2 19.981 4.019 22 6.5 22s4.5-2.019 4.5-4.5S8.981 13 6.5 13A4.505 4.505 0 0 0 2 17.5m5-.5h1.5a.5.5 0 0 1 0 1H7v1.5a.5.5 0 0 1-1 0V18H4.5a.5.5 0 0 1 0-1H6v-1.5a.5.5 0 0 1 1 0z"></path></svg></span>
                                     </span>
                                 </div>
                             </div>
@@ -355,31 +306,56 @@
 </div>
 
 <script>
-// Drag and drop functionality
+// --- OPTIMIZED SCRIPT ---
+
+const mediaGrid = document.getElementById('mediaGrid');
+
+// Optimization: Event Delegation
+// Instead of adding listeners to every single image (which is slow),
+// we add ONE listener to the container. It's faster to initialize and use.
+mediaGrid.addEventListener('click', function(e) {
+    // Check if user clicked an IMG or something inside a wrapper that contains an IMG
+    const targetImg = e.target.closest('img');
+    
+    // Only proceed if an image was clicked AND it is inside a button/clickable area
+    if (targetImg && mediaGrid.contains(targetImg)) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Toggle black class
+        targetImg.classList.toggle('turned-black');
+    }
+});
+
+// Drag and Drop Logic
 let draggedElement = null;
 
-document.querySelectorAll('[draggable="true"]').forEach(item => {
-    item.addEventListener('dragstart', function(e) {
+// Add drag listeners to the container (delegation doesn't work well for dragstart, so we loop)
+// But we keep the logic minimal inside the loop.
+const draggables = document.querySelectorAll('[draggable="true"]');
+draggables.forEach(item => {
+    item.addEventListener('dragstart', function() {
         draggedElement = this;
         this.style.opacity = '0.5';
     });
-
-    item.addEventListener('dragend', function(e) {
+    
+    item.addEventListener('dragend', function() {
         this.style.opacity = '';
+        draggedElement = null;
     });
-
+    
     item.addEventListener('dragover', function(e) {
-        e.preventDefault();
+        e.preventDefault(); // Necessary for drop to work
     });
-
+    
     item.addEventListener('drop', function(e) {
         e.preventDefault();
-        if (draggedElement !== this) {
-            const grid = document.getElementById('mediaGrid');
-            const allItems = Array.from(grid.querySelectorAll('[draggable="true"]'));
+        if (draggedElement && draggedElement !== this) {
+            const allItems = [...mediaGrid.querySelectorAll('[draggable="true"]')];
             const draggedIndex = allItems.indexOf(draggedElement);
             const targetIndex = allItems.indexOf(this);
             
+            // DOM manipulation is fast enough here for just swapping elements
             if (draggedIndex < targetIndex) {
                 this.parentNode.insertBefore(draggedElement, this.nextSibling);
             } else {
@@ -388,23 +364,6 @@ document.querySelectorAll('[draggable="true"]').forEach(item => {
         }
     });
 });
-
-/* --- NEW CODE ADDED FOR CLICK-TO-BLACK --- */
-// 1. Select all images inside the media grid
-const gridImages = document.querySelectorAll('#mediaGrid img');
-
-// 2. Add click event listener to each image
-gridImages.forEach(img => {
-    img.addEventListener('click', function(e) {
-        // Since images are inside buttons, we must stop the button from clicking/submitting
-        e.preventDefault();
-        e.stopPropagation();
-
-        // Toggle the black class on the specific image clicked
-        this.classList.toggle('turned-black');
-    });
-});
-/* ----------------------------------------- */
 </script>
 </body>
 </html>
