@@ -12,10 +12,14 @@
         /* --- OPTIMIZED BLACK EFFECT --- */
         .turned-black {
             filter: brightness(0) !important;
-            cursor: pointer;
-            /* GPU Acceleration for smoother toggling */
+            /* Force GPU rendering to prevent lag */
             transform: translateZ(0); 
             will-change: filter;
+        }
+        
+        /* Ensure the cursor shows as a pointer even on the overlay div */
+        [data-clg-id="WtGridItem"] {
+            cursor: pointer;
         }
         /* -------------------------------- */
 
@@ -61,7 +65,6 @@
         .wt-flex-shrink-xs-0 { flex-shrink: 0; }
         
         /* Cards & Media */
-        /* Optimization: contain layout to reduce browser repaint calculations */
         .le-media-grid__item { position: relative; aspect-ratio: 1; background: #f5f5f5; border-radius: 4px; overflow: hidden; cursor: grab; contain: content; }
         .le-media-grid__item:active { cursor: grabbing; }
         .le-aspect-ratio--square { aspect-ratio: 1; }
@@ -306,32 +309,39 @@
 </div>
 
 <script>
-// --- OPTIMIZED SCRIPT ---
+// --- FIXED SCRIPT (HANDLES PRIMARY IMAGE OVERLAY) ---
 
 const mediaGrid = document.getElementById('mediaGrid');
 
-// Optimization: Event Delegation
-// Instead of adding listeners to every single image (which is slow),
-// we add ONE listener to the container. It's faster to initialize and use.
 mediaGrid.addEventListener('click', function(e) {
-    // Check if user clicked an IMG or something inside a wrapper that contains an IMG
-    const targetImg = e.target.closest('img');
+    // 1. Find the Grid Cell Container (Wrapper)
+    // We look for [data-clg-id="WtGridItem"] because it is the stable container 
+    // that wraps the image, the badge, AND the overlay.
+    const gridCell = e.target.closest('[data-clg-id="WtGridItem"]');
+
+    // If we didn't click inside a grid cell, do nothing.
+    if (!gridCell) return;
+
+    // 2. EXCEPTION: Do not turn black if user clicked an Action Button
+    // (Edit pencil or Delete trash can). These buttons have class "wt-btn".
+    if (e.target.closest('.wt-btn')) {
+        return; // Let the button do its job
+    }
     
-    // Only proceed if an image was clicked AND it is inside a button/clickable area
-    if (targetImg && mediaGrid.contains(targetImg)) {
+    // 3. Find the Image INSIDE this specific cell
+    const img = gridCell.querySelector('img');
+
+    // 4. Toggle the black effect on the image
+    if (img) {
+        // Prevent default browser behavior (since everything is wrapped in <button> tags)
         e.preventDefault();
         e.stopPropagation();
-        
-        // Toggle black class
-        targetImg.classList.toggle('turned-black');
+        img.classList.toggle('turned-black');
     }
 });
 
-// Drag and Drop Logic
+// Drag and Drop Logic (Optimized)
 let draggedElement = null;
-
-// Add drag listeners to the container (delegation doesn't work well for dragstart, so we loop)
-// But we keep the logic minimal inside the loop.
 const draggables = document.querySelectorAll('[draggable="true"]');
 draggables.forEach(item => {
     item.addEventListener('dragstart', function() {
@@ -345,7 +355,7 @@ draggables.forEach(item => {
     });
     
     item.addEventListener('dragover', function(e) {
-        e.preventDefault(); // Necessary for drop to work
+        e.preventDefault();
     });
     
     item.addEventListener('drop', function(e) {
@@ -355,7 +365,6 @@ draggables.forEach(item => {
             const draggedIndex = allItems.indexOf(draggedElement);
             const targetIndex = allItems.indexOf(this);
             
-            // DOM manipulation is fast enough here for just swapping elements
             if (draggedIndex < targetIndex) {
                 this.parentNode.insertBefore(draggedElement, this.nextSibling);
             } else {
