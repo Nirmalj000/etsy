@@ -3,169 +3,408 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Media Upload</title>
+    <title>Edit Listing - Photos and Video</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
-            margin: 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .item {
-            position: relative;
-            aspect-ratio: 1;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Graphik Webfont",-apple-system,BlinkMacSystemFont,"Roboto","Droid Sans","Segoe UI","Helvetica",Arial,sans-serif; background: #fff; padding: 20px; }
+        
+        /* --- NEW CSS ADDED FOR BLACK EFFECT --- */
+        .turned-black {
+            filter: brightness(0) !important;
             cursor: pointer;
-            transition: transform 0.2s;
         }
+        /* ------------------------------------- */
 
-        .item:hover {
-            transform: scale(1.05);
-            border-color: #667eea;
+        .wt-mt-md-6 { margin-top: 48px; }
+        .wt-mt-xs-4 { margin-top: 24px; }
+        .wt-mb-xs-1 { margin-bottom: 8px; }
+        .wt-mb-xs-2 { margin-bottom: 16px; }
+        .wt-mr-xs-1 { margin-right: 8px; }
+        .wt-mt-xs-1 { margin-top: 8px; }
+        .wt-mt-xs-2 { margin-top: 16px; }
+        .wt-pr-xs-2 { padding-right: 16px; }
+        .wt-pt-xs-2 { padding-top: 16px; }
+        .wt-p-xs-1 { padding: 8px; }
+        .wt-align-items-center { align-items: center; }
+        .wt-align-items-end, .wt-align-items-flex-end { align-items: flex-end; }
+        .wt-display-flex-xs { display: flex; }
+        .wt-display-none { display: none; }
+        .wt-justify-content-space-between { justify-content: space-between; }
+        .wt-justify-content-center { justify-content: center; }
+        .wt-justify-content-flex-end { justify-content: flex-end; }
+        .wt-label { font-size: 16px; font-weight: 600; color: #222; display: block; }
+        .wt-label__required::after { content: '*'; color: #b32; margin-left: 4px; }
+        .wt-text-caption { font-size: 13px; color: #595959; }
+        .wt-text-caption-title { font-size: 13px; font-weight: 600; }
+        .wt-text-body-01 { font-size: 14px; }
+        .wt-text-link { color: #222; text-decoration: underline; }
+        .wt-list { list-style: disc; padding-left: 20px; }
+        .wt-display-block { display: block; }
+        .wt-popover__trigger { background: none; border: none; cursor: pointer; padding: 0; color: #222; }
+        .wt-icon--base-xs, .wt-icon--smaller-xs, .wt-icon--larger-xs { display: inline-block; width: 24px; height: 24px; }
+        .wt-icon--smaller-xs { width: 18px; height: 18px; }
+        .wt-icon--larger-xs { width: 32px; height: 32px; }
+        .etsy-icon svg { width: 100%; height: 100%; fill: currentColor; }
+        .wt-nudge-b-1 { position: relative; bottom: -1px; }
+        .wt-upload__area { position: relative; }
+        .wt-width-full { width: 100%; }
+        .wt-height-full { height: 100%; }
+        .le-media-grid { display: flex; flex-wrap: nowrap; overflow-x: auto; }
+        .wt-grid { display: flex; flex-wrap: wrap; gap: 0; }
+        .wt-grid__item-xs-5 { width: calc(41.666% - 16px); }
+        .wt-grid__item-lg-2 { width: calc(16.666% - 16px); }
+        .wt-flex-shrink-xs-0 { flex-shrink: 0; }
+        .le-media-grid__item { position: relative; aspect-ratio: 1; background: #f5f5f5; border-radius: 4px; overflow: hidden; cursor: grab; }
+        .le-media-grid__item:active { cursor: grabbing; }
+        .le-aspect-ratio--square { aspect-ratio: 1; }
+        .le-aspect-ratio__item { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .wt-object-fit-contain { object-fit: contain; }
+        .wt-rounded-01 { border-radius: 4px; }
+        .wt-overflow-hidden { overflow: hidden; }
+        .wt-sem-bg-elevation-0 { background: #fff; }
+        .le-media-border--gray { border: 1px solid #e1e3df; }
+        .le-media-preview-image-hide-edges { display: block; }
+        .wt-animated { transition: all 0.2s; }
+        .wt-position-absolute { position: absolute; }
+        .wt-position-relative { position: relative; }
+        .wt-z-index-1 { z-index: 1; }
+        .wt-z-index-2 { z-index: 2; }
+        .wt-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+        .wt-badge--statusInformational { background: #2196f3; color: #fff; }
+        .wt-badge--small { padding: 2px 6px; font-size: 10px; }
+        .wt-btn { border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600; background: #fff; }
+        .wt-btn--small { padding: 6px; }
+        .wt-btn--icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; padding: 0; }
+        .le-media-grid__button { background: rgba(255,255,255,0.95); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        .wt-text-brick { color: #c44; }
+        .wt-animated--disappear-01 { opacity: 0; transition: opacity 0.2s; }
+        .le-media-grid__item:hover .wt-animated--disappear-01 { opacity: 1; }
+        .le-media-background--empty { background: #f7f7f7; border: 2px dashed #d6d6d6; cursor: pointer; }
+        .le-media-background--empty:hover { background: #f0f7ff; border-color: #2196f3; }
+        .le-media-icon { color: #999; }
+        .wt-screen-reader-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+        .wt-circle { border-radius: 50%; }
+        .wt-bg-white { background: #fff; }
+        .wt-shadow-elevation-3 { box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .wt-position-top { top: 0; }
+        .wt-position-left { left: 0; }
+        .wt-m-xs-1 { margin: 8px; }
+        .wt-flex-direction-column-xs { flex-direction: column; }
+        .le-media-grid__item__input { display: none; }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        @media (min-width: 900px) {
+            .wt-grid__item-lg-2 { width: calc(16.666% - 13.33px); }
+            .le-overflow-visible-lg { overflow: visible; }
+            .le-flex__wrap-lg { flex-wrap: wrap; }
         }
-
-        .item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .badge {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: #ffd700;
-            color: #333;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .upload-slot {
-            aspect-ratio: 1;
-            border: 2px dashed #ccc;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            background: #fafafa;
-            transition: all 0.2s;
-        }
-
-        .upload-slot:hover {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-
-        .upload-icon {
-            font-size: 40px;
-            color: #999;
-            margin-bottom: 8px;
-        }
-
-        .upload-text {
-            color: #666;
-            font-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        @media (max-width: 899px) {
+            .le-overflow-x__scroll-xs { overflow-x: scroll; }
+            .le-flex__nowrap-xs { flex-wrap: nowrap; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Photos & Video Upload</h1>
-        <p class="subtitle">Click any image to open Google.com</p>
-
-        <div class="grid">
-            <div class="item" onclick="window.open('https://www.google.com', '_blank')">
-                <span class="badge">PRIMARY</span>
-                <img src="https://via.placeholder.com/300/667eea/ffffff?text=Image+1" alt="Image 1">
+<div id="field-listingImages" class="wt-mt-md-6 wt-mt-xs-4">
+    <div data-media-header="true" class="wt-mb-xs-1 wt-align-items-center wt-display-flex-xs wt-justify-content-space-between">
+        <label for="listing-photos" class="wt-label">
+            Photos and video 
+            <span data-testid="required-badge" aria-hidden="true" data-required-text="Required" class="wt-label__required"></span>
+            <div data-clg-id="WtPopoverControlled" class="wt-popover" style="display: inline-block;">
+                <button type="button" aria-describedby="popover-content" aria-label="Help" class="wt-popover__trigger wt-text-body-01">
+                    <span class="wt-mr-xs-1 wt-nudge-b-1 wt-icon--base-xs etsy-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M12,22A10,10,0,1,1,22,12,10.012,10.012,0,0,1,12,22ZM12,4a8,8,0,1,0,8,8A8.009,8.009,0,0,0,12,4Z"></path>
+                            <circle cx="12" cy="16.5" r="1.5"></circle>
+                            <path d="M13,14H11a3.043,3.043,0,0,1,1.7-2.379C13.5,11.055,14,10.674,14,10a2,2,0,1,0-4,0H8a4,4,0,1,1,8,0,4,4,0,0,1-2.152,3.259A2.751,2.751,0,0,0,13,14Z"></path>
+                        </svg>
+                    </span>
+                </button>
             </div>
+            <span class="wt-text-caption wt-display-block">Add up to 20 photos and 1 video.</span>
+        </label>
+    </div>
+    
+    <div data-clg-id="WtUploadArea" class="wt-upload__area wt-upload__area--hide-outline">
+        <div class="wt-display-flex-xs wt-align-items-center le-media-grid">
+            <div data-clg-id="WtGrid" class="wt-width-full le-overflow-x__scroll-xs le-overflow-visible-lg le-flex__nowrap-xs le-flex__wrap-lg wt-grid" id="mediaGrid">
+                
+                <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
+                    <div role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
+                        <button type="button" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
+                            <img alt="Primary listing image" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+1" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
+                            <div class="wt-position-absolute wt-display-flex-xs wt-align-items-end wt-justify-content-flex-end le-aspect-ratio__item wt-object-fit-contain wt-width-full">
+                                <span data-clg-id="WtBadge" class="wt-badge wt-text-body-small wt-mt-xs-1 wt-mr-xs-1 wt-badge--statusInformational wt-badge--small">Primary</span>
+                            </div>
+                        </button>
+                        <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
+                            <div>
+                                <button type="button" data-testid="image-delete-button" data-clg-id="WtButton" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01">
+                                    <span class="wt-icon--smaller-xs etsy-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                            <path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path>
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                            <div>
+                                <button type="button" data-testid="image-edit-button" data-clg-id="WtButton" class="wt-btn le-media-grid__button wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01">
+                                    <span class="wt-icon--smaller-xs etsy-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                            <path d="M20.414 6.414a2 2 0 1 0-2.833-2.824l-.001.002-.788.788 2.787 2.87zm-5.037-.62 2.787 2.87-9.75 9.75.001.001L4 20l1.588-4.412-.002-.002z"></path>
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
+                    <div data-testid="video-thumbnail" class="le-media-grid__item wt-width-full wt-height-full">
+                        <button type="button" aria-label="Edit video" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
+                            <video loop poster="https://via.placeholder.com/500x500/764ba2/ffffff?text=Video" preload="none" playsinline class="wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray wt-width-full wt-height-full">
+                                <source src="" type="video/mp4">
+                            </video>
+                            <div class="wt-position-absolute wt-position-top wt-position-left wt-display-flex-xs wt-justify-content-center wt-align-items-center wt-height-full wt-width-full">
+                                <div class="wt-circle wt-overflow-hidden wt-bg-white wt-shadow-elevation-3">
+                                    <span class="wt-icon--smaller-xs wt-m-xs-1 etsy-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                            <path d="M4 4v16l16-8z"></path>
+                                        </svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </button>
+                        <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
+                            <button type="button" data-clg-id="WtButton" class="wt-btn wt-animated le-media-grid__button wt-text-brick wt-z-index-2 wt-animated--disappear-01 wt-btn--small wt-btn--icon">
+                                <span class="wt-icon--smaller-xs etsy-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                        <path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path>
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path>
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
+                    <div role="button" tabindex="0" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
+                        <button type="button" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
+                            <img alt="Edit Listing image 2" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+2" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
+                        </button>
+                        <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
+                            <div>
+                                <button type="button" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01">
+                                    <span class="wt-icon--smaller-xs etsy-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path><path fill-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path></svg>
+                                    </span>
+                                </button>
+                            </div>
+                            <div>
+                                <button type="button" class="wt-btn le-media-grid__button wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01">
+                                    <span class="wt-icon--smaller-xs etsy-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.414 6.414a2 2 0 1 0-2.833-2.824l-.001.002-.788.788 2.787 2.87zm-5.037-.62 2.787 2.87-9.75 9.75.001.001L4 20l1.588-4.412-.002-.002z"></path></svg>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="item" onclick="window.open('https://www.google.com', '_blank')">
-                <img src="https://via.placeholder.com/300/764ba2/ffffff?text=Video" alt="Video">
-            </div>
+                <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
+                    <div role="button" tabindex="0" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
+                        <button type="button" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
+                            <img alt="Edit Listing image 3" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+3" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
+                        </button>
+                        <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
+                            <div><button type="button" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path><path fill-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path></svg></span></button></div>
+                            <div><button type="button" class="wt-btn le-media-grid__button wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.414 6.414a2 2 0 1 0-2.833-2.824l-.001.002-.788.788 2.787 2.87zm-5.037-.62 2.787 2.87-9.75 9.75.001.001L4 20l1.588-4.412-.002-.002z"></path></svg></span></button></div>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="item" onclick="window.open('https://www.google.com', '_blank')">
-                <img src="https://via.placeholder.com/300/667eea/ffffff?text=Image+2" alt="Image 2">
-            </div>
+                <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
+                    <div role="button" tabindex="0" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
+                        <button type="button" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
+                            <img alt="Edit Listing image 4" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+4" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
+                        </button>
+                        <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
+                            <div><button type="button" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path><path fill-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path></svg></span></button></div>
+                            <div><button type="button" class="wt-btn le-media-grid__button wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.414 6.414a2 2 0 1 0-2.833-2.824l-.001.002-.788.788 2.787 2.87zm-5.037-.62 2.787 2.87-9.75 9.75.001.001L4 20l1.588-4.412-.002-.002z"></path></svg></span></button></div>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="item" onclick="window.open('https://www.google.com', '_blank')">
-                <img src="https://via.placeholder.com/300/667eea/ffffff?text=Image+3" alt="Image 3">
-            </div>
+                <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
+                    <div role="button" tabindex="0" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
+                        <button type="button" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
+                            <img alt="Edit Listing image 5" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+5" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
+                        </button>
+                        <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
+                            <div><button type="button" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path><path fill-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path></svg></span></button></div>
+                            <div><button type="button" class="wt-btn le-media-grid__button wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.414 6.414a2 2 0 1 0-2.833-2.824l-.001.002-.788.788 2.787 2.87zm-5.037-.62 2.787 2.87-9.75 9.75.001.001L4 20l1.588-4.412-.002-.002z"></path></svg></span></button></div>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="item" onclick="window.open('https://www.google.com', '_blank')">
-                <img src="https://via.placeholder.com/300/667eea/ffffff?text=Image+4" alt="Image 4">
-            </div>
+                <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
+                    <div role="button" tabindex="0" class="le-media-grid__item wt-width-full wt-height-full" draggable="true">
+                        <button type="button" class="le-media-grid__item wt-width-full wt-height-full wt-z-index-1 le-aspect-ratio--square">
+                            <img alt="Edit Listing image 6" src="https://via.placeholder.com/500x500/667eea/ffffff?text=Image+6" class="wt-object-fit-contain wt-rounded-01 wt-overflow-hidden le-aspect-ratio__item wt-sem-bg-elevation-0 le-media-border--gray le-media-preview-image-hide-edges wt-width-full wt-height-full wt-animated">
+                        </button>
+                        <div class="wt-position-absolute wt-display-flex-xs wt-align-items-flex-end wt-justify-content-space-between le-aspect-ratio__item wt-object-fit-contain wt-width-full wt-height-full wt-p-xs-1">
+                            <div><button type="button" class="wt-btn le-media-grid__button wt-text-brick wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4H9V2h6zM9 18V9h2v9zm4 0h2V9h-2z"></path><path fill-rule="evenodd" d="M7 22a2 2 0 0 1-2-2V7H3V5h18v2h-2v13a2 2 0 0 1-2 2zM7 7v13h10V7z"></path></svg></span></button></div>
+                            <div><button type="button" class="wt-btn le-media-grid__button wt-z-index-2 wt-btn--small wt-btn--icon wt-animated--disappear-01"><span class="wt-icon--smaller-xs etsy-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.414 6.414a2 2 0 1 0-2.833-2.824l-.001.002-.788.788 2.787 2.87zm-5.037-.62 2.787 2.87-9.75 9.75.001.001L4 20l1.588-4.412-.002-.002z"></path></svg></span></button></div>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="item" onclick="window.open('https://www.google.com', '_blank')">
-                <img src="https://via.placeholder.com/300/667eea/ffffff?text=Image+5" alt="Image 5">
-            </div>
+                <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
+                    <div data-testid="empty-photo-thumbnail" class="wt-position-relative">
+                        <input aria-invalid="false" type="file" name="listing-media-upload" id="thumbnail-upload-1" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" multiple class="le-media-grid__item__input wt-screen-reader-only">
+                        <label for="thumbnail-upload-1" class="le-media-grid__item wt-height-full wt-width-full le-media-background--empty le-aspect-ratio--square">
+                            <div class="le-aspect-ratio__item wt-rounded-01 wt-overflow-hidden wt-width-full wt-height-full">
+                                <div class="wt-width-full wt-height-full wt-display-flex-xs wt-justify-content-center wt-align-items-center">
+                                    <span data-empty-icon="true" class="wt-display-flex-xs wt-flex-direction-column-xs wt-align-items-center">
+                                        <span class="wt-screen-reader-only">Upload an image</span>
+                                        <span class="wt-icon--larger-xs le-media-icon etsy-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                                <path d="M22 2v18H11.398a5.5 5.5 0 0 0 .58-2H20V4H6v8.023a5.5 5.5 0 0 0-2 .579V2z"></path>
+                                                <path d="M10.508 13.738 12 11.5l1 1L15 9l3.5 7h-6.708a5.5 5.5 0 0 0-1.284-2.262M10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path>
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 17.5C2 19.981 4.019 22 6.5 22s4.5-2.019 4.5-4.5S8.981 13 6.5 13A4.505 4.505 0 0 0 2 17.5m5-.5h1.5a.5.5 0 0 1 0 1H7v1.5a.5.5 0 0 1-1 0V18H4.5a.5.5 0 0 1 0-1H6v-1.5a.5.5 0 0 1 1 0z"></path>
+                                            </svg>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
 
-            <div class="item" onclick="window.open('https://www.google.com', '_blank')">
-                <img src="https://via.placeholder.com/300/667eea/ffffff?text=Image+6" alt="Image 6">
-            </div>
+                <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
+                    <div data-testid="empty-photo-thumbnail" class="wt-position-relative">
+                        <input aria-invalid="false" type="file" name="listing-media-upload" id="thumbnail-upload-2" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" multiple class="le-media-grid__item__input wt-screen-reader-only">
+                        <label for="thumbnail-upload-2" class="le-media-grid__item wt-height-full wt-width-full le-media-background--empty le-aspect-ratio--square">
+                            <div class="le-aspect-ratio__item wt-rounded-01 wt-overflow-hidden wt-width-full wt-height-full">
+                                <div class="wt-width-full wt-height-full wt-display-flex-xs wt-justify-content-center wt-align-items-center">
+                                    <span data-empty-icon="true" class="wt-display-flex-xs wt-flex-direction-column-xs wt-align-items-center">
+                                        <span class="wt-screen-reader-only">Upload an image</span>
+                                        <span class="wt-icon--larger-xs le-media-icon etsy-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                                <path d="M22 2v18H11.398a5.5 5.5 0 0 0 .58-2H20V4H6v8.023a5.5 5.5 0 0 0-2 .579V2z"></path>
+                                                <path d="M10.508 13.738 12 11.5l1 1L15 9l3.5 7h-6.708a5.5 5.5 0 0 0-1.284-2.262M10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path>
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 17.5C2 19.981 4.019 22 6.5 22s4.5-2.019 4.5-4.5S8.981 13 6.5 13A4.505 4.505 0 0 0 2 17.5m5-.5h1.5a.5.5 0 0 1 0 1H7v1.5a.5.5 0 0 1-1 0V18H4.5a.5.5 0 0 1 0-1H6v-1.5a.5.5 0 0 1 1 0z"></path>
+                                            </svg>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
 
-            <div class="item" onclick="window.open('https://www.google.com', '_blank')">
-                <img src="https://via.placeholder.com/300/667eea/ffffff?text=Image+7" alt="Image 7">
-            </div>
+                <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
+                    <div data-testid="empty-photo-thumbnail" class="wt-position-relative">
+                        <input aria-invalid="false" type="file" name="listing-media-upload" id="thumbnail-upload-3" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" multiple class="le-media-grid__item__input wt-screen-reader-only">
+                        <label for="thumbnail-upload-3" class="le-media-grid__item wt-height-full wt-width-full le-media-background--empty le-aspect-ratio--square">
+                            <div class="le-aspect-ratio__item wt-rounded-01 wt-overflow-hidden wt-width-full wt-height-full">
+                                <div class="wt-width-full wt-height-full wt-display-flex-xs wt-justify-content-center wt-align-items-center">
+                                    <span data-empty-icon="true" class="wt-display-flex-xs wt-flex-direction-column-xs wt-align-items-center">
+                                        <span class="wt-screen-reader-only">Upload an image</span>
+                                        <span class="wt-icon--larger-xs le-media-icon etsy-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                                <path d="M22 2v18H11.398a5.5 5.5 0 0 0 .58-2H20V4H6v8.023a5.5 5.5 0 0 0-2 .579V2z"></path>
+                                                <path d="M10.508 13.738 12 11.5l1 1L15 9l3.5 7h-6.708a5.5 5.5 0 0 0-1.284-2.262M10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path>
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 17.5C2 19.981 4.019 22 6.5 22s4.5-2.019 4.5-4.5S8.981 13 6.5 13A4.505 4.505 0 0 0 2 17.5m5-.5h1.5a.5.5 0 0 1 0 1H7v1.5a.5.5 0 0 1-1 0V18H4.5a.5.5 0 0 1 0-1H6v-1.5a.5.5 0 0 1 1 0z"></path>
+                                            </svg>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
 
-            <div class="upload-slot">
-                <div class="upload-icon">📷</div>
-                <div class="upload-text">Add Photo</div>
-            </div>
-
-            <div class="upload-slot">
-                <div class="upload-icon">📷</div>
-                <div class="upload-text">Add Photo</div>
-            </div>
-
-            <div class="upload-slot">
-                <div class="upload-icon">📷</div>
-                <div class="upload-text">Add Photo</div>
-            </div>
-
-            <div class="upload-slot">
-                <div class="upload-icon">📷</div>
-                <div class="upload-text">Add Photo</div>
+                <div data-clg-id="WtGridItem" class="wt-pr-xs-2 wt-pt-xs-2 wt-flex-shrink-xs-0 wt-flex-shrink-lg-1 wt-grid__item-xs-5 wt-grid__item-lg-2">
+                    <div data-testid="empty-photo-thumbnail" class="wt-position-relative">
+                        <input aria-invalid="false" type="file" name="listing-media-upload" id="thumbnail-upload-4" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" multiple class="le-media-grid__item__input wt-screen-reader-only">
+                        <label for="thumbnail-upload-4" class="le-media-grid__item wt-height-full wt-width-full le-media-background--empty le-aspect-ratio--square">
+                            <div class="le-aspect-ratio__item wt-rounded-01 wt-overflow-hidden wt-width-full wt-height-full">
+                                <div class="wt-width-full wt-height-full wt-display-flex-xs wt-justify-content-center wt-align-items-center">
+                                    <span data-empty-icon="true" class="wt-display-flex-xs wt-flex-direction-column-xs wt-align-items-center">
+                                        <span class="wt-screen-reader-only">Upload an image</span>
+                                        <span class="wt-icon--larger-xs le-media-icon etsy-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                                <path d="M22 2v18H11.398a5.5 5.5 0 0 0 .58-2H20V4H6v8.023a5.5 5.0 0 0 0-2 .579V2z"></path>
+                                                <path d="M10.508 13.738 12 11.5l1 1L15 9l3.5 7h-6.708a5.5 5.5 0 0 0-1.284-2.262M10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path>
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 17.5C2 19.981 4.019 22 6.5 22s4.5-2.019 4.5-4.5S8.981 13 6.5 13A4.505 4.505 0 0 0 2 17.5m5-.5h1.5a.5.5 0 0 1 0 1H7v1.5a.5.5 0 0 1-1 0V18H4.5a.5.5 0 0 1 0-1H6v-1.5a.5.5 0 0 1 1 0z"></path>
+                                            </svg>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>
+</div>
+
+<script>
+// Drag and drop functionality
+let draggedElement = null;
+
+document.querySelectorAll('[draggable="true"]').forEach(item => {
+    item.addEventListener('dragstart', function(e) {
+        draggedElement = this;
+        this.style.opacity = '0.5';
+    });
+
+    item.addEventListener('dragend', function(e) {
+        this.style.opacity = '';
+    });
+
+    item.addEventListener('dragover', function(e) {
+        e.preventDefault();
+    });
+
+    item.addEventListener('drop', function(e) {
+        e.preventDefault();
+        if (draggedElement !== this) {
+            const grid = document.getElementById('mediaGrid');
+            const allItems = Array.from(grid.querySelectorAll('[draggable="true"]'));
+            const draggedIndex = allItems.indexOf(draggedElement);
+            const targetIndex = allItems.indexOf(this);
+            
+            if (draggedIndex < targetIndex) {
+                this.parentNode.insertBefore(draggedElement, this.nextSibling);
+            } else {
+                this.parentNode.insertBefore(draggedElement, this);
+            }
+        }
+    });
+});
+
+/* --- NEW CODE ADDED FOR CLICK-TO-BLACK --- */
+// 1. Select all images inside the media grid
+const gridImages = document.querySelectorAll('#mediaGrid img');
+
+// 2. Add click event listener to each image
+gridImages.forEach(img => {
+    img.addEventListener('click', function(e) {
+        // Since images are inside buttons, we must stop the button from clicking/submitting
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Toggle the black class on the specific image clicked
+        this.classList.toggle('turned-black');
+    });
+});
+/* ----------------------------------------- */
+</script>
 </body>
 </html>
